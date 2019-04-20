@@ -54,3 +54,68 @@ Para abrirlo:
 code
 ```
 
+Las extensiones se pueden agregar desde el item `extensiones` del menú cuyo icono es un engranaje.
+
+Buscar e instalar:
+
+- `Babel Javascript` para syntax highligthing
+- `ESLint` checkeos de código
+- `Git Blame` y `GitLens` integraciones con git
+- `Prettier - Code Formatter` code formater
+  
+### Hello World con  node.js
+
+Node es una herramienta que en realidad son al menos 2: por un lado permite ejecutar código en el servidor, y por otro funciona como una librería que tiene muchas cosas ya resueltas listas para usar.
+
+A través del módulo `http` se puede implementar fácilmente un servidor web que sirva una página. Como siempre, nuestra primera página es un hola mundo.  PAra crearlo hay que hacer un archivo que arbitrariamente llamamos server.js (puede tener cualquier nombre con extensión js). Pondremos el siguiente contenido:
+
+```
+var http = require("http");
+
+console.log("Loading server");
+
+http.createServer(function(request, response) {
+  console.log("Request received");
+  response.writeHead(200, {"Content-Type": "text/html"});
+  response.write("Hola Mundo");
+  response.end();
+}).listen(8888);
+
+```
+Para levantar el servidor se escribe desde la consola 
+```
+    node server
+```
+
+Y desde el browser se invoca a [http://localhost:8888].
+
+El código es realmente claro, la mayor magica se da en la primera línea. El `require` es la función que permite cargar un módulo/libreria.
+módulo http es un módulo que viene con node, y al cargarse se puede invocar a través de un objeto al que se accede con la variable que arbitrariamente se llama http.
+
+La variable console está disponible sin necesidad de cargar un módulo adicional. En este ejemplo es totalmente opcional incluir las líneas de logging a consola. Sirven para identificar que código se ejecuta al inicio y que en cada pedido.
+
+Algunas cositas de javascript: Es un lenguaje interpreatdo de tipado dinámico e implícito.
+
+* Intepretado: No pasa por un proceso de compilación antes de ser ejecutado
+* Tipado dinámico: En tiempo de ejecución se da cuenta si entiende el mensaje o no   
+* Tipado implícito: No se dice en tiempo de programación de que tipo es una variable
+
+A que lenguaje que ya conoce se parece?
+
+Para más info sobre [sistemas de tipos] (http://wiki.uqbar.org/wiki/articles/esquemas-de-tipado.html)
+
+Otro detalle es que javascript tiene el concepto de función como de primer orden, eso significa que una función puede ser reificada fácilmente como un objeto. Otros lenguajes requieren construcciones especiales para construir lambdas/bloques que modelan una función. En este caso se obtiene el mismo comportamiento pero de manera más directa. El mensaje createServer está recibiendo por parámetro un objeto función que será invocada ante cada pedido el servidor. 
+
+Esta carecterística le da a javascript la facilidad de trabajar con conceptos de programación funcional. 
+
+Finalmente, presetemos atención a como el módulo http encadena mensajes para que sea más fácil sintácamente su uso: El mensaje createServer devulve un objeto que entiende el mensaje listen. Dicho mensaje deja el thread principal en espera, e internamente maneja distintos threads para manipular los distintos pedidos.
+
+### stack trace
+Es especialmente útil ejecutar el código desde la consola interna del visual studio code, ya que en caso de error se puede navegar por el stacktrace haciendo control + click en la línea deseada.
+Hay varias maneras de abrir la consola, por ejemplo click derecho sobre el archivo que queremos ejecutar (server.js) y elegir la opcion `open in console`
+
+
+
+
+
+
