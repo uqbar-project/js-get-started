@@ -114,6 +114,93 @@ Finalmente, presetemos atención a como el módulo http encadena mensajes para q
 Es especialmente útil ejecutar el código desde la consola interna del visual studio code, ya que en caso de error se puede navegar por el stacktrace haciendo control + click en la línea deseada.
 Hay varias maneras de abrir la consola, por ejemplo click derecho sobre el archivo que queremos ejecutar (server.js) y elegir la opcion `open in console`
 
+### Modularización
+En toda aplicación es importante el concepto de modularización que el código pueda ser mantenible.
+Vamos a refactorizar nuestro server.js para que sea un módulo exportable desde otro archivo. Simplemente hay que construir funciones que querramos que sean públicas y luego registrarlas como un atributo del objeto 'exports'
+
+```
+var http = require("http");
+
+function init() {
+  console.log("Loading server");
+
+  http
+    .createServer(function(request, response) {
+      console.log("Request received");
+      response.writeHead(200, { "Content-Type": "text/html" });
+      response.write("Hola Mundo");
+      response.end();
+    })
+    .listen(8888);
+}
+
+exports.init = init;
+
+```
+
+y desde otro archivo, por ejemplo app.js, importarlo y usarlo:
+
+```
+server = require("./server")
+server.init();
+```
+
+Ahora nuestra aplicación node se ejecuta con `node app`
+
+#### Eventos
+Node utiliza eventos para poder comunicar distintos módulos y utilizar internamente un único thread.
+En todo mecanismo de eventos siempre hay dos Partes: Uno que dispara el evento y otro que maneja el evento. (Hay variantes, por supuesto, combinando múltiples handlers/dispatchers).
+
+En este ejemplo vamos a utilizar los eventos de node para separar más nuestro server/app. El server se encargará de estructurar una página html, 
+y disparará un evento que la app escuchará para completar el body.
+
+Para vincular un handler y un dispatcher se utiliza el un EventEmitter del módulo events.
+El método `on` se utiliza para registrar un handler, mientras que el `emit` para disparar un evento.
+Un envento tiene un nombre, y opcionalmente parámetros. 
+
+En este ejemplo definimos un único evento llamado `request`. 
+La app debe pasar por parámetro al init un objeto que entienda el mensaje `onRequest` y recibe por parámetro el response, para que pueda escribir el body. 
+
+app.js
+```
+server = require("./server")
+
+class MyHandler {
+    onRequest(response) {
+        response.write("Esto es magia");
+    }
+}
+
+handler = new MyHandler();
+server.init(handler);
+```
+
+server.js
+```
+var http = require("http");
+var events = require("events");
+var eventEmitter = new events.EventEmitter();
+
+function init(restHandler) {
+  console.log("Loading server");
+
+  eventEmitter.on("request", restHandler.onRequest);   
+
+  http
+    .createServer(function(request, response) {
+      console.log("Request received");
+      response.writeHead(200, { "Content-Type": "text/html" });
+      response.write("<html><head><title>js example </title></head><body><h1>Response</h1><p>\n");
+      eventEmitter.emit('request', response);
+      response.write("</p></body></html>") ;
+      response.end();
+
+    })
+    .listen(8888);
+}
+
+exports.init = init;
+```
 
 
 

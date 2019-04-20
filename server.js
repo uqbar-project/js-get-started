@@ -1,10 +1,24 @@
 var http = require("http");
+var events = require("events");
+var eventEmitter = new events.EventEmitter();
 
-console.log("Loading server");
+function init(restHandler) {
+  console.log("Loading server");
 
-http.createServer(function(request, response) {
-  console.log("Request received");
-  response.writeHead(200, {"Content-Type": "text/html"});
-  response.write("Hola Mundo");
-  response.end();
-}).listen(8888);
+  eventEmitter.on("request", restHandler.onRequest);   
+
+  http
+    .createServer(function(request, response) {
+      console.log("Request received");
+      response.writeHead(200, { "Content-Type": "text/html" });
+      response.write("<html><head><title>js example </title></head><body><h1>Response</h1><p>\n");
+      eventEmitter.emit('request', response);
+      response.write("</p></body></html>") ;
+      response.end();
+
+    })
+    .listen(8888);
+}
+
+exports.init = init;
+
