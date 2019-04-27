@@ -1,21 +1,36 @@
-var http = require("http");
+express = require("express");
+bodyParser = require("body-parser");
 
-function init(object) {
-  console.log("Loading server");
+function init(home) {
+  var server = express();
+  server.use(bodyParser.json());
 
-  http
-    .createServer(function(request, response) {
-      console.log("Request received");
-      response.writeHead(200, { "Content-Type": "application/json" });
-      
-      response.write(JSON.stringify(object));
-      
-      
-      response.end();
+  server.get("/", (req, res) => {
+    res.json(home.all());
+  })
 
-    })
-    .listen(8888);
+  server.get("/:id", (req, res) => {
+    res.json(home.get(req.params.id));
+  })
+
+  server.put("/", (req, res) => {
+    home.update(req.body);
+    res.status(204).end();
+  })
+
+  server.post("/", (req, res) => {
+    home.insert(req.body);
+    res.status(204).end();
+  })
+
+  server.delete("/:id", (req, res) => {
+    home.delete(req.params.id);
+    res.status(204).end();
+  });
+
+  server.listen(8888, () => {
+    console.log("Server running on port 8888");
+  });
 }
 
 exports.init = init;
-

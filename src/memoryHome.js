@@ -12,7 +12,7 @@ class MemoryHome {
     }
 
     delete(elementId) {
-        this.elements[elementId] = undefined
+        delete this.elements[elementId]
     }
 
     get(elementId) {
@@ -20,11 +20,14 @@ class MemoryHome {
     }
 
     update(element) {
+        if(!this.elements[element.id]) {
+            throw new Error(`element ${element.id} don't exist`);
+        }
         this.elements[element.id] = element
     }
 
     all() {
-        return Object.entries(this.elements).map(function (x) {return x[1]} )
+        return Object.entries(this.elements).map( (x) =>  x[1] )
     }
 
 }

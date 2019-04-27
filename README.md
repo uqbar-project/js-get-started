@@ -151,10 +151,9 @@ Ahora nuestra aplicación node se ejecuta con `node app`
 
 #### Objetos
 
-Vamos a ir construyendo un servidor REST para manipula el CRUD de un entidad. Si bien existen liberías como [express](https://expressjs.com/es/)
-que resuelve este tipo de problemática. Intencionalmente haremos una arquitectura propia para terminar de acomodarnos a javascript y a Node antes de introducir nuevas tecnológias.
+Vamos a ir construyendo un servidor REST para manipula el CRUD de un entidad. 
 
-En principio vamos a hacer que nuestro servidor devuelva un [json](https://www.json.org/). Un json es una notación para describir un objeto javascript que ha tomado popularidad para ser usado también como standard para el intercambio de información, reemplazando lo que anteriormente era dominio de XML.
+En principio vamos a hacer que nuestro servidor devuelva [json](https://www.json.org/). Un json es una notación para describir un objeto javascript que ha tomado popularidad para ser usado también como standard para el intercambio de información, reemplazando lo que anteriormente era dominio de XML.
 
 La estrategia será tener un objeto y renderizarlo a json. Hay muchas
 maneras distintas de tener objetos, ya que los mismos se pueden crear dinámicamente, con clases o funciones.
@@ -217,9 +216,10 @@ var myObject = new Producto("alfajor", 20);
 server.init(myObject);
 ```
 
-También podemos sacar la clase a un archivo externo e importarlo como módulo de node. La preparación de un módulo que exporta un constructor es levemente distinta. Se debe usar `module.exports` y asignarle la Clase.
+Podemos sacar la clase a un archivo externo e importarlo como módulo de node. La preparación de un módulo que exporta un constructor es levemente distinta. Se debe usar `module.exports` y asignarle la Clase.
+Además vamos a ir escribiendo nuestros clases dentro de una subcarpeta `src` para mantener el root un poco más prolijo:
 
-producto.js
+src/producto.js
 ```
 class Producto {
 
@@ -241,7 +241,7 @@ var myObject = new Producto("alfajor", 20);
 
 server.init(myObject);
 ```
-### Unit Testing
+## Clase 3: Unit Testing
 
 En nuestro afán por construir un servidor REST para resolver un CRUD, vamos a construir primer un objeto Home. En nuestra primera versión 
 la persistencia de los objetos será en memoria. Para ayudarnos a crear 
@@ -254,48 +254,69 @@ npm init
 ```
 La mayoría de las opciones ofrecidas por default son buenas. Como licencia podemos usar `GPL-3.0-or-later`. Todos los valores pueden ser luego modificados. En particular nos puede interesar modificar el valor del script `start` para que utilice nuestra app en lugar del server. Esto permitiría iniciar nuestra aplicaciones ejecutando `npm start`
 
-Luego instalamos el módulo `uuid`. Le pasamos la opción `--save` así modifica el package.json para agregar la dependencia
+Luego instalamos el módulo `uuid`. Usamos la opción `--save` así modifica el package.json para agregar la dependencia
+
+Hay que tener en cuenta que todos los módulos que se bajen quedarán guardados en la carpeta `node_modules`. Esta carpeta se debe agregar al .gitignore
 
 ```
  npm install uuid --save
 ```
 
+Y escribimos nuetra home:
 
-memoryHome.js
+src/memoryHome.js
 ```
+uuid = require("uuid/v1")
+
 class MemoryHome {
 
     constructor() {
         this.elements = {};
     }
 
-    add(element) {
+    insert(element) {
+        element.id = uuid();
         this.elements[element.id] = element;
     }
 
-    remove(elementId) {
+    delete(elementId) {
         delete this.elements[elementId]
     }
 
     get(elementId) {
-        return this.elements[elementId];
+        return this.elements[elementId]
     }
 
     update(element) {
-        this.elements[element.id] = element;
+        if(!this.elements[element.id]) {
+            throw new Error(`element ${element.id} don't exist`);
+        }
+        this.elements[element.id] = element
     }
 
     all() {
-        return Object.entries(this.elements).map(function (x) {return x[1]} )
+        return Object.entries(this.elements).map( (x) =>  x[1] )
     }
 
 }
 
-module.exports = MemoryHome;
+module.exports = MemoryHome
 ```
 
-Esta clase ya comienza a tener comportamiento que nos gustaría testear de manera automática, ya que si bien los métodos get/add/remove/update son
-simples, el método all tiene algo más de comportamiento.
+Algunas consideraciones:
+ 1. La expresión ` (x)=>x[1] ` es una manera abreviada de escribir `function (x) {return x[1]} )`. Es una manera de escribir una función con una notación más parecida a las lambdas de otros lenguajes. Se usa bastante cuando se quiere programar con un estilo más parecido al funcional
+2. Si bien existen los objetos "map" en javascript, la mayoría de la funcionalidad de un mapa puede ser resuelto simplemente con un objeto simple. Por eso guardamos en "elements" un objeto vacío.
+3. La función Object.entries permite obtener un array con  todos los atributos de un objeto, Por ejemplo si tengo este objeto: 
+`var choco = {"nombre": "chocolate", "precio": 20}` 
+La llamada a `Object.entries(choco)` devuelve el siguiente array
+`[["nombre", "chocolate"], ["precio", 20]]`
+4. La home le agrega un atributo "id" a los objetos. Este atributo no está definido en la clase ni en ningún lado, no hace falta porque es un lenguaje
+dinámico.
+5. `undefined` es una referencia a un objeto que significa eso. 
+Cuando a un objeto se le pide un atributo que no contiene devuelve `undefined`. `if(undefined)` devuelve false, así que se puede usar para saber si existe un elemento o no.
+
+
+Esta clase ya comienza a tener comportamiento que nos gustaría testear de manera automática, 
 
 Existen varias variantes para realizar testing automático. Dos frameworks muy utilizados en conjunto son [Mocha](https://mochajs.org/) para correr test y [Chai](https://www.chaijs.com/) para realizar aserciones. Sin embargo en este proyecto vamos a utilizar [Jest](https://jestjs.io/)
 
@@ -333,24 +354,140 @@ package.json
     "url": "https://github.com/uqbar-project/js-get-started/issues"
   },
   "homepage": "https://github.com/uqbar-project/js-get-started#readme",
-  "dependencies": {},
+  "dependencies": {
+    "uuid": "^3.3.2"
+  },
   "devDependencies": {
     "jest": "^24.7.1"
   }
 }
+
 ```
 
 Luego escribimos algunos test. Para lo cual creamos un archivo separado:
 
 
-tests/memoryHomeTest.js
+Y finalmente vamos a escribir algunos test. Por prolijidad lo vamos a escrivir en una subcarpeta `test`. Jest requiere para encontrar los test que el archivo donde se escriben los mismos tengan extensión .test.js
+
+/tests/memoryHomeTest.js
+
 ```
+MemoryHome = require("../src/memoryHome")
+Product = require ("../src/producto")
+
+var home
+var chocolate
+var alfajor
+
+
+function setup() {
+    home = new MemoryHome()
+    chocolate = new Product("chocolate", 30)
+    alfajor = new Product("alfajor", 20)
+    home.insert(alfajor)
+    home.insert(chocolate)
+}
+
+function get() {
+    expect(home.get(chocolate.id)).toBe(chocolate)
+    expect(home.get(alfajor.id)).toBe(alfajor)
+}
+
+function getNotContained() {
+    expect(home.get("pirulito")).toBe(undefined)
+}
+
+function deleteObject() {
+    home.delete(chocolate.id);
+    expect(home.get(chocolate.id)).toBe(undefined)
+    expect(home.get(alfajor.id)).toBe(alfajor)
+}
+
+function update() {
+    chocolate.precio = 45
+    home.update(chocolate);
+    expect(home.get(chocolate.id).precio).toBe(45);
+}
+
+function all() {
+    var all = home.all();
+    expect(all).toContain(chocolate);
+    expect(all).toContain(alfajor);
+}
+
+//register functions
+
+beforeEach(setup)
+test(get.name, get)
+test(getNotContained.name, getNotContained)
+test(deleteObject.name, deleteObject)
+test(update.name, update)
+test(all.name, all)
+
 ```
 
+Jest es un framework bastante grande, solo estamos usando una partecita aquí. Las funciones beforeEach permite registrar una función que se ejecuta antes de cada test. Y la función test permite registrar bajo un nombre una función que será lo que se ejecute para testear. Cada test usa
+`expect` para realizar las validaciones. En [Jest](https://jestjs.io/) se puede encontrar la documentación de todas las maneras de realizar las aserciones.
+
+#### Clase 4: Modificando el server para que sea restful: Express
+
+La manera más sencilla de convertir nuestro servidor en un servidor Rest es utilizando una librería como [express](https://expressjs.com/es/)
+que resuelve este tipo de problemática. 
+
+Además de express vamos a necesitar un módulo adicional que antiguamente venía includo, que permite obtener fácilmente el body de un request. El mismo se llama body-parser
+
+```
+    npm install express body-parser --save
+```
+
+y este es el código fuente del servidor:
+
+server.js
+```
+express = require("express");
+bodyParser = require("body-parser");
+
+function init(home) {
+  var server = express();
+  server.use(bodyParser.json());
+
+  server.get("/", (req, res) => {
+    res.json(home.all());
+  })
+
+  server.get("/:id", (req, res) => {
+    res.json(home.get(req.params.id));
+  })
+
+  server.put("/", (req, res) => {
+    home.update(req.body);
+    res.status(204).end();
+  })
+
+  server.post("/", (req, res) => {
+    home.insert(req.body);
+    res.status(204).end();
+  })
+
+  server.delete("/:id", (req, res) => {
+    home.delete(req.params.id);
+    res.status(204).end();
+  });
+
+  server.listen(8888, () => {
+    console.log("Server running on port 8888");
+  });
+}
+
+exports.init = init;
+
+```
+
+Se puede ver como se van registrando los distintos handlers para cada tipo de pedido. Es importante entender como se puede recuperar información a partir del path, usando `:`.
+Para probar el servidor se puede usar cualquier cliente REST, tanto Firefox como Chrome tienen plugins que se utilizan para eso.
 
 
-
-#### Eventos
+#### Eventos (TODO: acomodarlo a las clases previas)
 Node utiliza eventos para poder comunicar distintos módulos y utilizar internamente un único thread.
 En todo mecanismo de eventos siempre hay dos Partes: Uno que dispara el evento y otro que maneja el evento. (Hay variantes, por supuesto, combinando múltiples handlers/dispatchers).
 
