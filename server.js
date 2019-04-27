@@ -1,19 +1,16 @@
 var http = require("http");
-var events = require("events");
-var eventEmitter = new events.EventEmitter();
 
-function init(restHandler) {
+function init(object) {
   console.log("Loading server");
-
-  eventEmitter.on("request", restHandler.onRequest);   
 
   http
     .createServer(function(request, response) {
       console.log("Request received");
-      response.writeHead(200, { "Content-Type": "text/html" });
-      response.write("<html><head><title>js example </title></head><body><h1>Response</h1><p>\n");
-      eventEmitter.emit('request', response);
-      response.write("</p></body></html>") ;
+      response.writeHead(200, { "Content-Type": "application/json" });
+      
+      response.write(JSON.stringify(object));
+      
+      
       response.end();
 
     })

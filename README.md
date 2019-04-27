@@ -5,7 +5,7 @@ Proyecto para ir aprendiendo el desarrollo de aplicaciones con javascript.
 
 Javascript es un lenguaje que tradicionalmente ejecuta en el browser. En su comienzos se utilizó para darle dinamismo a las páginas HTMLs del lado del cliente. Se utilizaba casi exclusivamente para realizar validaciones y acceder a los objetos del DOM para modificar algún atributo. El DOM es el modelo que mantiene el browser sobre el html que se está visualizando (y algunas cositas más). Si se modifica el dom, se modifica lo que se visualiza.
  
-Hace unos años se comenzó a utilizar también para el servidor como parte de [Node](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#links) y también para reemplazar el HTML como lenguaje de generación de interfaz grádica, siendo [Angular](https://angular.io/) uno de los primeras y más famoso frameworks para esto. Aunque en esta guía nos vamos a volcar por otra alternativa llamada [react](https://angular.io/).
+Hace unos años se comenzó a utilizar también para el servidor como parte de [Node](https://nodejs.org/es/) y también para reemplazar el HTML como lenguaje de generación de interfaz gráfica, siendo [Angular](https://angular.io/) uno de los primeras y más famoso frameworks para esto. Aunque en esta guía nos vamos a volcar por otra alternativa llamada [react](https://angular.io/).
 
 El uso de Node + Angular fue potenciado por el gestor de paquetes [npm](https://www.npmjs.com/), una especie de Maven para JS que surgió como parte de Node. En lugar de declarar la estructura del proyecto en un pom.xml, npm utiliza un archivo llamado package.json. Npm presentó algunos problemas de performance y seguridad,  entonces Facebook desarrolló una alternativa llamada [yarn](https://yarnpkg.com) que utiliza las mismas definiciones en el package.json
 
@@ -146,6 +146,209 @@ server.init();
 ```
 
 Ahora nuestra aplicación node se ejecuta con `node app`
+
+## Clase 2: Objetos, Clases y Eventos
+
+#### Objetos
+
+Vamos a ir construyendo un servidor REST para manipula el CRUD de un entidad. Si bien existen liberías como [express](https://expressjs.com/es/)
+que resuelve este tipo de problemática. Intencionalmente haremos una arquitectura propia para terminar de acomodarnos a javascript y a Node antes de introducir nuevas tecnológias.
+
+En principio vamos a hacer que nuestro servidor devuelva un [json](https://www.json.org/). Un json es una notación para describir un objeto javascript que ha tomado popularidad para ser usado también como standard para el intercambio de información, reemplazando lo que anteriormente era dominio de XML.
+
+La estrategia será tener un objeto y renderizarlo a json. Hay muchas
+maneras distintas de tener objetos, ya que los mismos se pueden crear dinámicamente, con clases o funciones.
+
+app.js
+```
+server = require("./server")
+
+var myObject = {
+    "nombre": "alfajor", 
+    "precio": 20
+} 
+
+server.init(myObject);
+```
+
+server.js
+```
+var http = require("http");
+
+function init(object) {
+  console.log("Loading server");
+
+  http
+    .createServer(function(request, response) {
+      console.log("Request received");
+      response.writeHead(200, { "Content-Type": "application/json" });
+      
+      response.write(JSON.stringify(object));
+      
+      
+      response.end();
+
+    })
+    .listen(8888);
+}
+
+exports.init = init;
+```
+### Clases
+También podemos construir el objeto a partir de una clase.
+En este ejemplo se cambia solo la app.js para usar clases. El servidor
+no se entera del cambio, le da igual.
+
+app.js
+```
+server = require("./server")
+
+class Producto {
+
+    constructor(nombre, precio) {
+        this.nombre = nombre;
+        this.precio = precio;
+    }
+}
+
+
+var myObject = new Producto("alfajor", 20);
+
+server.init(myObject);
+```
+
+También podemos sacar la clase a un archivo externo e importarlo como módulo de node. La preparación de un módulo que exporta un constructor es levemente distinta. Se debe usar `module.exports` y asignarle la Clase.
+
+producto.js
+```
+class Producto {
+
+    constructor(nombre, precio) {
+        this.nombre = nombre;
+        this.precio = precio;
+    }
+}
+
+module.exports = Producto;
+```
+
+app.js
+```
+server = require("./server")
+Producto = require ("./producto")
+
+var myObject = new Producto("alfajor", 20);
+
+server.init(myObject);
+```
+### Unit Testing
+
+En nuestro afán por construir un servidor REST para resolver un CRUD, vamos a construir primer un objeto Home. En nuestra primera versión 
+la persistencia de los objetos será en memoria. Para ayudarnos a crear 
+los id vamos a usar un módulo externo `uuid`.
+
+Como ya vamos a empezar a usar cosas externas a node, vamos generar también el `package.json` donde dice entre otras cosas cuales son los módulos externos que se requieren para ejecutar proyecto. 
+
+```
+npm init
+```
+La mayoría de las opciones ofrecidas por default son buenas. Como licencia podemos usar `GPL-3.0-or-later`. Todos los valores pueden ser luego modificados. En particular nos puede interesar modificar el valor del script `start` para que utilice nuestra app en lugar del server. Esto permitiría iniciar nuestra aplicaciones ejecutando `npm start`
+
+Luego instalamos el módulo `uuid`. Le pasamos la opción `--save` así modifica el package.json para agregar la dependencia
+
+```
+ npm install uuid --save
+```
+
+
+memoryHome.js
+```
+class MemoryHome {
+
+    constructor() {
+        this.elements = {};
+    }
+
+    add(element) {
+        this.elements[element.id] = element;
+    }
+
+    remove(elementId) {
+        delete this.elements[elementId]
+    }
+
+    get(elementId) {
+        return this.elements[elementId];
+    }
+
+    update(element) {
+        this.elements[element.id] = element;
+    }
+
+    all() {
+        return Object.entries(this.elements).map(function (x) {return x[1]} )
+    }
+
+}
+
+module.exports = MemoryHome;
+```
+
+Esta clase ya comienza a tener comportamiento que nos gustaría testear de manera automática, ya que si bien los métodos get/add/remove/update son
+simples, el método all tiene algo más de comportamiento.
+
+Existen varias variantes para realizar testing automático. Dos frameworks muy utilizados en conjunto son [Mocha](https://mochajs.org/) para correr test y [Chai](https://www.chaijs.com/) para realizar aserciones. Sin embargo en este proyecto vamos a utilizar [Jest](https://jestjs.io/)
+
+
+Luego instalamos jest, y usamos la opción --save-dev para que se incluya en el package.json como dependencia de desarrollo
+
+```
+npm install jest --save-dev
+```
+y modificamos el atributo test de script en el package.json para que use jest:
+
+package.json
+```
+{
+  "name": "js-get-started",
+  "version": "1.0.0",
+  "description": "js tutorial",
+  "main": "app.js",
+  "scripts": {
+    "test": "jest",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uqbar-project/js-get-started.git"
+  },
+  "keywords": [
+    "js",
+    "tutorial",
+    "node"
+  ],
+  "author": "lgassman",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/uqbar-project/js-get-started/issues"
+  },
+  "homepage": "https://github.com/uqbar-project/js-get-started#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "jest": "^24.7.1"
+  }
+}
+```
+
+Luego escribimos algunos test. Para lo cual creamos un archivo separado:
+
+
+tests/memoryHomeTest.js
+```
+```
+
+
+
 
 #### Eventos
 Node utiliza eventos para poder comunicar distintos módulos y utilizar internamente un único thread.

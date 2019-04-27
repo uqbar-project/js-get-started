@@ -1,10 +1,11 @@
 server = require("./server")
+Producto = require ("./producto")
+Home = require("./memoryHome")
 
-class MyHandler {
-    onRequest(response) {
-        response.write("Esto es magia");
-    }
-}
+var myObject = new Producto("alfajor", 20);
+var home = new Home();
 
-handler = new MyHandler();
-server.init(handler);
+console.log("what is? " + JSON.stringify(home))
+home.insert(myObject)
+
+server.init(myObject);
