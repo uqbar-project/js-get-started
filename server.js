@@ -1,31 +1,46 @@
 express = require("express");
 bodyParser = require("body-parser");
+var events = require("events");
 
-function init(home) {
+var eventEmitter = new events.EventEmitter();
+
+
+function register(home) {
+  console.log(`registering handlers for ${home.type}`)
+  eventEmitter.on(`find-${home.type}`, (response)=>response.json(home.all()))
+  eventEmitter.on(`get-${home.type}`, (response,id)=> response.json(home.get(id)))
+  eventEmitter.on(`update-${home.type}`, (object)=> home.update(object))
+  eventEmitter.on(`insert-${home.type}`, (object)=> home.insert(object))
+  eventEmitter.on(`delete-${home.type}`, (id)=> home.delete(id))
+}
+
+function init() {
   var server = express();
   server.use(bodyParser.json());
 
-  server.get("/", (req, res) => {
-    res.json(home.all());
+  server.get("/:type", (req, res) => {
+    eventEmitter.emit(`find-${req.params.type}`, res);
+    res.end()
   })
 
-  server.get("/:id", (req, res) => {
-    res.json(home.get(req.params.id));
+  server.get("/:type/:id", (req, res) => {
+    eventEmitter.emit(`get-${req.params.type}`, res, req.params.id);
+    res.end()
   })
 
-  server.put("/", (req, res) => {
-    home.update(req.body);
-    res.status(204).end();
+  server.put("/:type", (req, res) => {
+    eventEmitter.emit(`update-${req.params.type}`, req.body);
+    res.status(204).end();  
   })
 
-  server.post("/", (req, res) => {
-    home.insert(req.body);
-    res.status(204).end();
+  server.post("/:type", (req, res) => {
+    eventEmitter.emit(`insert-${req.params.type}`, req.body);
+    res.status(204).end();  
   })
 
-  server.delete("/:id", (req, res) => {
-    home.delete(req.params.id);
-    res.status(204).end();
+  server.delete("/:type/:id", (req, res) => {
+    eventEmitter.emit(`delete-${req.params.type}`, req.params.id);
+    res.status(204).end();  
   });
 
   server.listen(8888, () => {
@@ -34,3 +49,4 @@ function init(home) {
 }
 
 exports.init = init;
+exports.register = register;
