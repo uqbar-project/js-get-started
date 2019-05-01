@@ -638,6 +638,24 @@ exports.register = register;
 
 ```
 
+### Clase 5 : Persistiendo en MongoDB
+ 
+La instalación depende de la versión del sistema operativo: [install](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/) 
+
+Para iniciar el servicio
+```
+sudo service mongod start
+```
+
+Y se puede usar por línea de comandos usando `mongo` client. Sin embargo esta parte no será necesaria ya que el cliente será nuestra app.
+
+Agregamos la dependencia a nuestro proyecto
+
+```
+npm install mongodb --save
+```
+
+
 
 
 
