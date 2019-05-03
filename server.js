@@ -7,29 +7,8 @@ var eventEmitter = new events.EventEmitter();
 
 function register(home) {
   console.log(`registering handlers for ${home.type}`)
-  
-  eventEmitter.on(`find-${home.type}`, 
-              (response)=>
-                home.all( 
-                  ( result) => {
-                    response.json(result)
-                    response.end()
-                  }
-              )    
-  )
-
-  eventEmitter.on(`get-${home.type}`, 
-              (id, response)=> {
-              console.log("respondiendo evento, llamando a la home")
-                home.get(id, 
-                  ( result ) => {
-                    response.json(result)
-                    response.end()
-                  }
-              )}
-  )    
-
-   
+  eventEmitter.on(`find-${home.type}`, (response)=>response.json(home.all()))
+  eventEmitter.on(`get-${home.type}`, (response,id)=> response.json(home.get(id)))
   eventEmitter.on(`update-${home.type}`, (object)=> home.update(object))
   eventEmitter.on(`insert-${home.type}`, (object)=> home.insert(object))
   eventEmitter.on(`delete-${home.type}`, (id)=> home.delete(id))
@@ -41,13 +20,13 @@ function init() {
 
   server.get("/:type", (req, res) => {
     eventEmitter.emit(`find-${req.params.type}`, res);
-
+    res.end()
   })
 
   server.get("/:type/:id", (req, res) => {
-    console.log("pedido recibido, lanzando evento")
-    eventEmitter.emit(`get-${req.params.type}`, req.params.id, res);
-   })
+    eventEmitter.emit(`get-${req.params.type}`, res, req.params.id);
+    res.end()
+  })
 
   server.put("/:type", (req, res) => {
     eventEmitter.emit(`update-${req.params.type}`, req.body);
