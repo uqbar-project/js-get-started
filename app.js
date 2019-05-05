@@ -1,13 +1,5 @@
 server = require("./server")
-
-class Producto {
-
-    constructor(nombre, precio) {
-        this.nombre = nombre;
-        this.precio = precio;
-    }
-}
-
+Producto = require ("./src/producto")
 
 var myObject = new Producto("alfajor", 20);
 
