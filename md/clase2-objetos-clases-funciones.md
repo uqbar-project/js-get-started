@@ -67,8 +67,8 @@ var myObject = new Producto("alfajor", 20);
 server.init(myObject);
 ```
 
-Podemos sacar la clase a un archivo externo e importarlo como módulo de node. La preparación de un módulo que exporta un constructor es levemente distinta. Se debe usar `module.exports` y asignarle la Clase.
-Además vamos a ir escribiendo nuestros clases dentro de una subcarpeta `src` para mantener el root un poco más prolijo:
+Podemos sacar la clase a un archivo externo e importarlo como módulo de node. La preparación de un módulo que exporta un constructor es levemente distinta. Se debe usar `module.exports` y asignarle la clase.
+Además vamos a ir escribiendo nuestras clases dentro de una subcarpeta `src` para mantener el root un poco más prolijo:
 
 #### src/producto.js
 ``` javascript
@@ -86,7 +86,7 @@ module.exports = Producto;
 #### app.js
 ``` javascript
 server = require("./server")
-Producto = require ("./producto")
+Producto = require ("./src/producto")
 
 var myObject = new Producto("alfajor", 20);
 
@@ -156,21 +156,21 @@ module.exports = MemoryHome
 ```
 
 Algunas consideraciones:
- 1. La expresión ` (x)=>x[1] ` es una manera abreviada de escribir `function (x) {return x[1]} )`. Es una manera de escribir una función con una notación más parecida a las lambdas de otros lenguajes. Se usa bastante cuando se quiere programar con un estilo más parecido al funcional
+ 1. La expresión ` (x)=>x[1] ` es una manera abreviada de escribir `function (x) {return x[1]} )`. Es una forma de escribir una función con una notación más parecida a las lambdas de otros lenguajes. Se usa bastante cuando se quiere programar con un estilo más parecido al funcional
 2. Si bien existen los objetos "map" en javascript, la mayoría de la funcionalidad de un mapa puede ser resuelto simplemente con un objeto simple. Por eso guardamos en "elements" un objeto vacío.
-3. La función Object.entries permite obtener un array con  todos los atributos de un objeto, Por ejemplo si tengo este objeto: 
+3. La función `Object.entries` permite obtener un array con  todos los atributos de un objeto, Por ejemplo si tengo este objeto: 
 `var choco = {"nombre": "chocolate", "precio": 20}` 
 La llamada a `Object.entries(choco)` devuelve el siguiente array
 `[["nombre", "chocolate"], ["precio", 20]]`
 4. La home le agrega un atributo "id" a los objetos. Este atributo no está definido en la clase ni en ningún lado, no hace falta porque es un lenguaje
 dinámico.
-5. `undefined` es una referencia a un objeto que significa eso. 
-Cuando a un objeto se le pide un atributo que no contiene devuelve `undefined`. `if(undefined)` devuelve false, así que se puede usar para saber si existe un elemento o no.
+5. `undefined` es una referencia a un objeto que significa justamente eso: objeto no definido. 
+Cuando a un objeto se le pide un atributo que no contiene devuelve `undefined`. `if(undefined)` resuelve `false`, así que se puede usar para saber si existe un elemento o no.
 
 
 ### Usando la MemoryHome
 
-Finalmente, solo para que nos quede el server/app sin funcionar, vamos a usar parcialmente la nueva home para realizar un update de un objeto en cada pedido:
+Finalmente, solo para que no nos quede el server/app sin funcionar, vamos a usar parcialmente la nueva home para realizar un update de un objeto en cada pedido:
 
 #### app.js
 ``` javascript
