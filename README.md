@@ -147,7 +147,7 @@ server.init();
 
 Ahora nuestra aplicación node se ejecuta con `node app`
 
-## Clase 2: Objetos, Clases y Eventos
+## Clase 2: Objetos, Clases y Testing
 
 #### Objetos
 
@@ -241,7 +241,10 @@ var myObject = new Producto("alfajor", 20);
 
 server.init(myObject);
 ```
-## Clase 3: Unit Testing
+
+
+
+###  Unit Testing
 
 En nuestro afán por construir un servidor REST para resolver un CRUD, vamos a construir primer un objeto Home. En nuestra primera versión 
 la persistencia de los objetos será en memoria. Para ayudarnos a crear 
@@ -428,6 +431,41 @@ test(all.name, all)
 
 Jest es un framework bastante grande, solo estamos usando una partecita aquí. Las funciones beforeEach permite registrar una función que se ejecuta antes de cada test. Y la función test permite registrar bajo un nombre una función que será lo que se ejecute para testear. Cada test usa
 `expect` para realizar las validaciones. En [Jest](https://jestjs.io/) se puede encontrar la documentación de todas las maneras de realizar las aserciones.
+
+
+Finalmente, solo para que nos quede el server/app sin funcionar, vamos a usar la nueva home para realizar un update de un objeto en cada pedido:
+
+app.js
+```
+server = require("./server")
+Home = require("./src/memoryHome")
+Producto = require("./src/producto")
+
+
+var myHome = new Home()
+var miProducto = new Producto("Papas Fritas", 30)
+myHome.insert(miProducto)
+
+server.init(myHome, miProducto)
+```
+
+
+```
+server.js
+
+server = require("./server")
+Home = require("./src/memoryHome")
+Producto = require("./src/producto")
+
+
+var myHome = new Home()
+var miProducto = new Producto("Papas Fritas", 30)
+myHome.insert(miProducto)
+
+server.init(myHome, miProducto)
+```
+
+
 
 #### Clase 4: Modificando el server para que sea restful: Express
 
