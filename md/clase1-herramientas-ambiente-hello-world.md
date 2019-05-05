@@ -66,7 +66,8 @@ Node es una herramienta que en realidad son al menos 2: por un lado permite ejec
 
 A través del módulo `http` se puede implementar fácilmente un servidor web que sirva una página. Como siempre, nuestra primera página es un hola mundo.  PAra crearlo hay que hacer un archivo que arbitrariamente llamamos server.js (puede tener cualquier nombre con extensión js). Pondremos el siguiente contenido:
 
-```
+#### server.js
+``` javascript
 var http = require("http");
 
 console.log("Loading server");
