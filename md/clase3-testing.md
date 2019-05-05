@@ -111,3 +111,8 @@ test(all.name, all)
 
 Jest es un framework bastante grande, solo estamos usando una pequeña parte aquí. Las funciones beforeEach permite registrar una función que se ejecuta antes de cada test. Y la función test permite registrar bajo un nombre una función que será lo que se ejecute para testear. Cada test usa
 `expect` para realizar las validaciones. En [Jest](https://jestjs.io/) se puede encontrar la documentación de todas las maneras de realizar las aserciones.
+
+Para ejecutar los tests:
+```
+npm test
+```
