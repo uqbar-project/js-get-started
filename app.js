@@ -1,2 +1,8 @@
 server = require("./server")
-server.init();
+
+var myObject = {
+    "nombre": "alfajor", 
+    "precio": 20
+} 
+
+server.init(myObject);
