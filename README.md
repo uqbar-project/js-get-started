@@ -8,3 +8,6 @@ Por cada clase existe un tag "inicial" con el estado esperado al inicio de la cl
 [Clase 2: Objetos, Clases, Funciones](md/clase2-objetos-clases-funciones.md)
 
 [Clase 3: Unit Testing](md/clase3-testing.md)
+
+[Clase 4: Rest y Eventos](md/clase4-rest-eventos.md)
+
