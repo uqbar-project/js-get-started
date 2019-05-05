@@ -11,3 +11,5 @@ Por cada clase existe un tag "inicial" con el estado esperado al inicio de la cl
 
 [Clase 4: Rest y Eventos](md/clase4-rest-eventos.md)
 
+[Clase 5: Persistencia](md/clase5-persistencia.md)
+
