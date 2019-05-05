@@ -1,8 +1,14 @@
 server = require("./server")
 
-var myObject = {
-    "nombre": "alfajor", 
-    "precio": 20
-} 
+class Producto {
+
+    constructor(nombre, precio) {
+        this.nombre = nombre;
+        this.precio = precio;
+    }
+}
+
+
+var myObject = new Producto("alfajor", 20);
 
 server.init(myObject);
