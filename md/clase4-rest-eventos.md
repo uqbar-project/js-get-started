@@ -59,12 +59,13 @@ Para probar el servidor se puede usar cualquier cliente REST, tanto Firefox como
 
 Nuestro servidor rest se comporta de la siguiente manera:
 
-| Method | url | body | accion
-| GET | / | | devuelve todos los objetos de la home |
-| GET | /uuid | | devuelve el objeto cuyo id coincide con la url |
-| POST | / | un objeto json | agrega el objeto del body a la home |
-| PUT | / | un objeto json | realiza un update para el objeto dado en el body, un objeto con el mismo id ya debe existir en la home |
-| DELETE | /uuid | | borra de la home el objeto cuyo id coincide con la url |
+| Method | url | body | accion 
+| -------|-----|------|--------
+| GET | / | | devuelve todos los objetos de la home 
+| GET | /uuid | | devuelve el objeto cuyo id coincide con la url 
+| POST | / | un objeto json | agrega el objeto del body a la home 
+| PUT | / | un objeto json | realiza un update para el objeto dado en el body, un objeto con el mismo id ya debe existir en la home 
+| DELETE | /uuid | | borra de la home el objeto cuyo id coincide con la url 
 
 
 ### Eventos
