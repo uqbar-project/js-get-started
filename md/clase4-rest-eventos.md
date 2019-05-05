@@ -57,15 +57,15 @@ exports.init = init;
 Se puede ver como se van registrando los distintos handlers para cada tipo de pedido. Es importante entender como se puede recuperar información a partir del path, usando `:`.
 Para probar el servidor se puede usar cualquier cliente REST, tanto Firefox como Chrome tienen plugins que se utilizan para eso. Es importante desde el cliente usar el content-type application/json como header del pedido http.
 
-Nuestro servidor rest se comporta de la siguiente manera:
+Nuestro servidor REST se comporta de la siguiente manera:
 
 | Method | url | body | accion 
 | -------|-----|------|--------
 | GET | / | | devuelve todos los objetos de la home 
-| GET | /uuid | | devuelve el objeto cuyo id coincide con la url 
+| GET | /<uuid> | | devuelve el objeto cuyo id coincide con la url 
 | POST | / | un objeto json | agrega el objeto del body a la home 
 | PUT | / | un objeto json | realiza un update para el objeto dado en el body, un objeto con el mismo id ya debe existir en la home 
-| DELETE | /uuid | | borra de la home el objeto cuyo id coincide con la url 
+| DELETE | /<uuid> | | borra de la home el objeto cuyo id coincide con la url 
 
 
 ### Eventos
@@ -135,7 +135,7 @@ class MemoryHome {
 module.exports = MemoryHome
 ```
 
-Vamos a registrar las homes en el server de la siguiente manera:
+Vamos a registrar las homes en el server de la siguiente manera, agregando algunos objetos iniciales.
 
 #### app.js
 ``` javascript
@@ -218,3 +218,15 @@ exports.init = init;
 exports.register = register;
 
 ```
+
+Nuestro servidor REST ahora se comporta de la siguiente manera:
+
+| Method | url | body | accion 
+| -------|-----|------|--------
+| GET | /<entity> | | devuelve todos los objetos de la home correspondiente a la entity de la url 
+| GET | /<entity>/<uuid> | | devuelve el objeto cuyo id coincide con la url de la home correspondiente a la entity 
+| POST | /<entity> | un objeto json | agrega el objeto del body a la home correspondiente a la entity
+| PUT | /<entity> | un objeto json | realiza un update para el objeto dado en el body, un objeto con el mismo id ya debe existir en la home de la entity 
+| DELETE | /<entity>/uuid | | borra de la home correspondiente a la entity el objeto cuyo id coincide con la url 
+
+entity puede tomar dos valores: `productos` o `clientes`
