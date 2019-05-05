@@ -446,26 +446,32 @@ var myHome = new Home()
 var miProducto = new Producto("Papas Fritas", 30)
 myHome.insert(miProducto)
 
-server.init(myHome, miProducto)
+server.init(myHome, miProducto.id)
 ```
 
 
 ```
-server.js
+var http = require("http");
 
-server = require("./server")
-Home = require("./src/memoryHome")
-Producto = require("./src/producto")
+function init(home, id_elemento) {
+  console.log("Loading server");
+  
+  http
+    .createServer(function(request, response) {
+      console.log(`Request received, `);
+      elemento = home.get(id_elemento)
+      elemento.precio = elemento.precio + 10
+      home.update(elemento)
 
+      response.writeHead(200, { "Content-Type": "application/json" });
+      response.write(JSON.stringify(elemento));
+      response.end();
+    })
+    .listen(8888);
+}
 
-var myHome = new Home()
-var miProducto = new Producto("Papas Fritas", 30)
-myHome.insert(miProducto)
-
-server.init(myHome, miProducto)
+exports.init = init;
 ```
-
-
 
 #### Clase 4: Modificando el server para que sea restful: Express
 
