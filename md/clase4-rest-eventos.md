@@ -62,10 +62,10 @@ Nuestro servidor REST se comporta de la siguiente manera:
 | Method | url | body | accion 
 | -------|-----|------|--------
 | GET | / | | devuelve todos los objetos de la home 
-| GET | /<uuid> | | devuelve el objeto cuyo id coincide con la url 
+| GET | /uuid | | devuelve el objeto cuyo id coincide con la url 
 | POST | / | un objeto json | agrega el objeto del body a la home 
 | PUT | / | un objeto json | realiza un update para el objeto dado en el body, un objeto con el mismo id ya debe existir en la home 
-| DELETE | /<uuid> | | borra de la home el objeto cuyo id coincide con la url 
+| DELETE | /uuid | | borra de la home el objeto cuyo id coincide con la url 
 
 
 ### Eventos
@@ -223,10 +223,10 @@ Nuestro servidor REST ahora se comporta de la siguiente manera:
 
 | Method | url | body | accion 
 | -------|-----|------|--------
-| GET | /<entity> | | devuelve todos los objetos de la home correspondiente a la entity de la url 
-| GET | /<entity>/<uuid> | | devuelve el objeto cuyo id coincide con la url de la home correspondiente a la entity 
-| POST | /<entity> | un objeto json | agrega el objeto del body a la home correspondiente a la entity
-| PUT | /<entity> | un objeto json | realiza un update para el objeto dado en el body, un objeto con el mismo id ya debe existir en la home de la entity 
-| DELETE | /<entity>/uuid | | borra de la home correspondiente a la entity el objeto cuyo id coincide con la url 
+| GET | /entity | | devuelve todos los objetos de la home correspondiente a la entity de la url 
+| GET | /entity/uuid | | devuelve el objeto cuyo id coincide con la url de la home correspondiente a la entity 
+| POST | /entity | un objeto json | agrega el objeto del body a la home correspondiente a la entity
+| PUT | /entity | un objeto json | realiza un update para el objeto dado en el body, un objeto con el mismo id ya debe existir en la home de la entity 
+| DELETE | /entity/uuid | | borra de la home correspondiente a la entity el objeto cuyo id coincide con la url 
 
 entity puede tomar dos valores: `productos` o `clientes`
