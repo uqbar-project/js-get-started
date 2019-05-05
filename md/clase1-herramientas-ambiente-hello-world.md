@@ -116,7 +116,8 @@ Hay varias maneras de abrir la consola, por ejemplo click derecho sobre el archi
 En toda aplicación es importante el concepto de modularización que el código pueda ser mantenible.
 Vamos a refactorizar nuestro server.js para que sea un módulo exportable desde otro archivo. Simplemente hay que construir funciones que querramos que sean públicas y luego registrarlas como un atributo del objeto 'exports'
 
-```
+#### server.js
+``` javascript
 var http = require("http");
 
 function init() {
@@ -138,7 +139,8 @@ exports.init = init;
 
 y desde otro archivo, por ejemplo app.js, importarlo y usarlo:
 
-```
+#### app.js
+``` javascript
 server = require("./server")
 server.init();
 ```
