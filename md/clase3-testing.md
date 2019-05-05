@@ -4,12 +4,13 @@ Nuestra MemoryHome es el primer objeto de esta guía que comienza a tener compor
 
 Existen varias variantes para realizar testing automático. Dos frameworks muy utilizados en conjunto son [Mocha](https://mochajs.org/) para correr test y [Chai](https://www.chaijs.com/) para realizar aserciones. Sin embargo en este proyecto vamos a utilizar [Jest](https://jestjs.io/)
 
-Luego instalamos jest, y usamos la opción --save-dev para que se incluya en el package.json como dependencia de desarrollo
+Instalamos jest usando la opción --save-dev para que se incluya en el package.json como dependencia pero solo de desarrollo
 
 ```
 npm install jest --save-dev
 ```
-y modificamos el atributo test de script en el package.json para que use jest:
+
+Modificamos el atributo test de script en el package.json para que use jest:
 
 #### package.json
 ``` json
@@ -47,12 +48,11 @@ y modificamos el atributo test de script en el package.json para que use jest:
 
 ```
 
-Luego escribimos algunos test. Para lo cual creamos un archivo separado:
+Luego escribimos algunos test.
+Por prolijidad los vamos a escribir en una subcarpeta `test`. 
+Jest requiere para encontrar los test que el archivo donde se escriben los mismos tengan extensión .test.js
 
-
-Y finalmente vamos a escribir algunos test. Por prolijidad lo vamos a escrivir en una subcarpeta `test`. Jest requiere para encontrar los test que el archivo donde se escriben los mismos tengan extensión .test.js
-
-#### /tests/memoryHomeTest.js
+#### /tests/memoryHome.test.js
 
 ``` javascript
 MemoryHome = require("../src/memoryHome")
@@ -109,5 +109,5 @@ test(all.name, all)
 
 ```
 
-Jest es un framework bastante grande, solo estamos usando una partecita aquí. Las funciones beforeEach permite registrar una función que se ejecuta antes de cada test. Y la función test permite registrar bajo un nombre una función que será lo que se ejecute para testear. Cada test usa
+Jest es un framework bastante grande, solo estamos usando una pequeña parte aquí. Las funciones beforeEach permite registrar una función que se ejecuta antes de cada test. Y la función test permite registrar bajo un nombre una función que será lo que se ejecute para testear. Cada test usa
 `expect` para realizar las validaciones. En [Jest](https://jestjs.io/) se puede encontrar la documentación de todas las maneras de realizar las aserciones.
