@@ -2,7 +2,8 @@ uuid = require("uuid/v1")
 
 class MemoryHome {
 
-    constructor() {
+    constructor(type) {
+        this.type = type
         this.elements = {};
     }
 

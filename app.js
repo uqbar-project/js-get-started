@@ -1,10 +1,18 @@
 server = require("./server")
+Producto = require ("./src/producto")
+Cliente = require ("./src/cliente")
 Home = require("./src/memoryHome")
-Producto = require("./src/producto")
 
+productoHome = new Home("productos")
 
-var myHome = new Home()
-var miProducto = new Producto("Papas Fritas", 30)
-myHome.insert(miProducto)
+productoHome.insert(new Producto("alfajor", 20))
+productoHome.insert(new Producto("chocolate", 30))
 
-server.init(myHome, miProducto.id)
+clienteHome = new Home("clientes")
+
+clienteHome.insert(new Cliente("pepito", "calle falsa 123"))
+clienteHome.insert(new Cliente("fulanito", "calle san martín s/n"))
+
+server.register(productoHome)
+server.register(clienteHome)
+server.init();
