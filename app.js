@@ -1,6 +1,10 @@
 server = require("./server")
-Producto = require ("./src/producto")
+Home = require("./src/memoryHome")
+Producto = require("./src/producto")
 
-var myObject = new Producto("alfajor", 20);
 
-server.init(myObject);
+var myHome = new Home()
+var miProducto = new Producto("Papas Fritas", 30)
+myHome.insert(miProducto)
+
+server.init(myHome, miProducto.id)

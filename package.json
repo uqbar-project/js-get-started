@@ -1,0 +1,27 @@
+{
+  "name": "js-get-started",
+  "version": "1.0.0",
+  "description": "js tutorial",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uqbar-project/js-get-started.git"
+  },
+  "keywords": [
+    "js",
+    "tutorual"
+  ],
+  "author": "lgassman",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/uqbar-project/js-get-started/issues"
+  },
+  "homepage": "https://github.com/uqbar-project/js-get-started#readme",
+  "dependencies": {
+    "uuid": "^3.3.2"
+  }
+}
