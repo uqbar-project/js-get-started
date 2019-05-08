@@ -4,7 +4,8 @@ Producto = require("./src/producto")
 
 
 var myHome = new Home()
-var miProducto = new Producto("Papas Fritas", 30)
-myHome.insert(miProducto)
+myHome.insert(new Producto("Papas Fritas", 30))
+myHome.insert(new Producto("Yerba La Cumbrecita", 36))
+myHome.insert(new Producto("Termo Lumilagro", 1250))
 
-server.init(myHome, miProducto.id)
+server.init(myHome)
