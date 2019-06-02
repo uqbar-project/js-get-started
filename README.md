@@ -13,3 +13,6 @@ Por cada clase existe un tag "inicial" con el estado esperado al inicio de la cl
 
 [Clase 5: Persistencia](md/clase5-persistencia.md)
 
+[Clase 6: Middleware](md/clase6-middleware.md)
+
+
