@@ -1,7 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
-import './App.css';
 import EntityList from './components/EntityList'
+import './App.css';
 
 function App() {
   return (
@@ -9,7 +9,8 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          <EntityList name="clientes" />
+          Edit <code>src/App.js</code> and save to reload.
+          <EntityList entity="clientes" />
         </p>
         <a
           className="App-link"

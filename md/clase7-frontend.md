@@ -54,7 +54,7 @@ class EntityList extends React.Component {
     render() {
       return (
         <div className="EntityList">
-          Aca van a mostrarse los {this.props.name}
+          Aca van a mostrarse los {this.props.entity}
         </div>
       );
     }
@@ -79,14 +79,14 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import EntityList from './components/EntityList'
-
+s
 function App() {
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          <EntityList name="clientes" />
+          <EntityList entity="clientes" />
         </p>
         <a
           className="App-link"

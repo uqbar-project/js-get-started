@@ -1,11 +1,12 @@
 express = require("express");
 bodyParser = require("body-parser");
+var cors = require('cors');
 
 var homes = {}
 
 
 function register(home) {
-  console.log(` registering handlers for ${home.type}`)
+  console.log(`registering handlers for ${home.type}`)
   homes[home.type] = home 
 }
 
@@ -23,6 +24,8 @@ function init() {
         next()
       }
   })
+
+  server.use(cors())
 
   server.get("/:type", (req, res) => {
     home = homes[req.params.type]
