@@ -1,5 +1,6 @@
 express = require("express");
 bodyParser = require("body-parser");
+cors = require("cors")
 
 var homes = {}
 
@@ -11,7 +12,8 @@ function register(home) {
 
 function init() {
   var server = express();
-  server.use(bodyParser.json());
+  server.use(bodyParser.json())
+  server.use(cors())
 
   server.use("(/:type/*)|(/:type)", (req, res, next) => {
       if (!homes[req.params.type]) {
