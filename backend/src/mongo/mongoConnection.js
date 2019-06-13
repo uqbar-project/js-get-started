@@ -1,7 +1,8 @@
 var MongoClient = require('mongodb').MongoClient;
 
-var host = process.env.MONGO_HOST || 'localhost'
-var url = `mongodb://${host}:27017`
+const HOST = process.env.MONGO_HOST || 'localhost'
+const PORT = process.env.MONGO_PORT || 27017
+var url = `mongodb://${HOST}:${PORT}`
 var dbname = 'mydb'
 var db
 
@@ -12,7 +13,7 @@ function connect(callback) {
         if (err) throw err
         console.log("Mongo DB Connected")
         db=_db.db(dbname)
-        callback(db)        
+        callback(db)
     })
 }
 
@@ -23,4 +24,3 @@ function close() {
 exports.connect = connect;
 exports.close = close;
 exports.url = url
-
