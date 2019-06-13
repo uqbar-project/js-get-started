@@ -10,8 +10,9 @@ services:
     environment:
       NODE_ENV: development
       MONGO_HOST: mongo
+      PORT: 8888
     ports:
-      - 3000:3000
+      - 8888:8888
     command: npm run dev
   mongo:
     image: mongo

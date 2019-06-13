@@ -3,11 +3,11 @@ bodyParser = require("body-parser");
 var cors = require('cors');
 
 var homes = {}
-
+const PORT = process.env.PORT || 8888
 
 function register(home) {
   console.log(`registering handlers for ${home.type}`)
-  homes[home.type] = home 
+  homes[home.type] = home
 }
 
 function init() {
@@ -30,37 +30,37 @@ function init() {
   server.get("/:type", (req, res) => {
     home = homes[req.params.type]
     home.all((allObjects) => {
-        res.json(allObjects) 
-        res.end() })       
+        res.json(allObjects)
+        res.end() })
   })
 
   server.get("/:type/:id", (req, res) => {
     home = homes[req.params.type]
-    home.get(req.params.id, (myObject) => { 
-      res.json(myObject) 
-      res.end() })  
+    home.get(req.params.id, (myObject) => {
+      res.json(myObject)
+      res.end() })
   })
 
   server.put("/:type", (req, res) => {
     home = homes[req.params.type]
     home.update(req.body)
-    res.status(204).end();  
+    res.status(204).end();
   })
 
   server.post("/:type", (req, res) => {
     home = homes[req.params.type]
     home.insert(req.body)
-    res.status(204).end();  
+    res.status(204).end();
   })
 
   server.delete("/:type/:id", (req, res) => {
     home = homes[req.params.type]
     home.delete(req.params.id)
-    res.status(204).end();  
+    res.status(204).end();
   });
 
-  server.listen(3000, () => {
-    console.log("Server running on port 8888");
+  server.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
   });
 }
 
