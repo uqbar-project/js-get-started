@@ -1,5 +1,5 @@
 
-## Clase 8 : FrontEnd (React)
+## Clase 7 : FrontEnd (React)
 
 ### Frontend y backend
 
