@@ -15,4 +15,5 @@ Por cada clase existe un tag "inicial" con el estado esperado al inicio de la cl
 
 [Clase 6: Middleware](md/clase6-middleware.md)
 
+[Clase 7: Frontend (React)](md/clase7-frontend.md)
 
