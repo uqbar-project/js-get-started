@@ -13,6 +13,7 @@ services:
       REACT_APP_API_PORT: 8888
     ports:
       - 3000:3000
+      - 35729:35729
     command: yarn start
   frontend-install:
     image: node:alpine
