@@ -29,14 +29,13 @@ class ProductoForm extends React.Component {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(this.state.producto)
-        }).then(res => console.log("OK"))
+        }).then(res => this.props.productoChange(this.state.producto))
           .catch(res => console.log("ERROR") );
 
         event.preventDefault();
       }
     
       render() {
-
         return (
           <form onSubmit={this.handleSubmit}>
             <label>Nombre:</label>

@@ -159,6 +159,8 @@ class ProductoRow extends React.Component {
 
 ```
 
+### Comunicación Padre/Hijo: Selección
+
 Nuestro próximo paso sera seleccionar un componente al hacer un click en una columna. El componente padre (Productos) renderizará el id del Producto seleccionado.
 
 Una de la manera más sencilla para realizar esto es pasándole una función que el componente hijo invocará cuando detecte el onclick. Esa función modifica el state del padre lo cual fuerza la re-renderización
@@ -265,6 +267,267 @@ class ProductoRow extends React.Component {
 
 ### Comunicación entre hermanos
 A través del padre se pueden comunicar los componentes hermanos. 
-Por ejemplo, podemos agregar un 
+En el siguiente ejemplo agregamos un componente que maneja un formulario para realizar el update en la base de datos del elemento elegido:
 
+####Productos
+
+``` javascript
+import React from 'react';
+import ProductoRow from './ProductoRow';
+import ProductoForm from './ProductoForm';
+
+class Productos extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { productos: [], selected:{}}
+    this.select = this.select.bind(this);
+  }
+
+  componentWillMount() {
+    fetch(`http://localhost:8888/productos`)
+      .then( res => res.json())
+      .then( prds => this.setState({productos: prds, selected: {}}));
+  }
+
+    render() {
+
+      if( this.state.productos.length > 0 ) {
+        return(
+          <div className="productosCSS">
+              <h2>{this.props.titulo}</h2>
+          
+          <table className="table">
+            <thead>
+              <tr>
+                 <th>id</th>
+                 <th>nombre</th>
+                 <th>precio</th>
+              </tr>
+            </thead>
+            <tbody>
+              {this.renderRows()}
+            </tbody>
+          </table>
+          <ProductoForm producto={this.state.selected} />
+        </div>)
+      }
+      else {
+        return(
+          <div className="productosCSS">
+              <h2>{this.props.titulo}</h2>
+              CARGANDO
+          </div>);  
+      }
+
+    }
+
+    select(unProducto) {
+      console.log(`selecting ${JSON.stringify(unProducto)}`)
+      this.setState({productos: this.state.productos, selected:unProducto })
+    }
+
+    renderRows() {
+      return this.state.productos.map((unProducto, index) => {
+        return (
+          <ProductoRow producto={unProducto} selector={this.select} />
+        );
+      })
+    }
+  
+  }
+
+  export default Productos
+  ```
+
+##### ProductoForm
+``` javascript
+import React from 'react';
+
+class ProductoForm extends React.Component {
+
+    constructor(props) {
+        super(props);
+    
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        this.state = {producto:props.producto}
+      }
+
+      componentWillReceiveProps(props) {
+          this.setState({producto: props.producto})
+      }
+
+      handleChange(event) {
+        var newState = Object.assign({}, this.state);
+        newState.producto[event.target.name] = event.target.value; 
+        this.setState(newState);
+      }
+
+      handleSubmit(event) {
+
+        fetch('http://localhost:8888/productos', {
+            method: 'put',
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(this.state.producto)
+        }).then(res => console.log("OK"))
+          .catch(res => console.log("ERROR") );
+
+        event.preventDefault();
+      }
+    
+      render() {
+        return (
+          <form onSubmit={this.handleSubmit}>
+            <label>Nombre:</label>
+            <input type="text" name="nombre" value={this.state.producto.nombre} onChange={this.handleChange}/>
+            <label>Precio:</label>
+            <input type="text" name="precio" value={this.state.producto.precio} onChange={this.handleChange} />
+            <input type="submit" value="Submit" />
+          </form>
+        );
+      }
+}
+
+  export default ProductoForm
+  ```
+
+### Avisando al padre del cambio
+
+A través de una función, podemos actualizar el valor de la grilla en el padre luego de realizar el put.
+
+####Productos.js
+
+``` javascript
+import React from 'react';
+import ProductoRow from './ProductoRow';
+import ProductoForm from './ProductoForm';
+
+class Productos extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { productos: [], selected:{}}
+    this.select = this.select.bind(this);
+    this.productoChange = this.productoChange.bind(this);
+  }
+
+  componentWillMount() {
+    fetch(`http://localhost:8888/productos`)
+      .then( res => res.json())
+      .then( prds => this.setState({productos: prds, selected: {}}));
+  }
+
+    render() {
+
+      
+      if( this.state.productos.length > 0 ) {
+        return(
+          <div className="productosCSS">
+              <h2>{this.props.titulo}</h2>
+          
+          <table className="table">
+            <thead>
+              <tr>
+                 <th>id</th>
+                 <th>nombre</th>
+                 <th>precio</th>
+              </tr>
+            </thead>
+            <tbody>
+              {this.renderRows()}
+            </tbody>
+          </table>
+          <ProductoForm producto={this.state.selected} productoChange={this.productoChange} />
+        </div>)
+      }
+      else {
+        return(
+          <div className="productosCSS">
+              <h2>{this.props.titulo}</h2>
+              CARGANDO
+          </div>);  
+      }
+
+    }
+
+    select(unProducto) {
+      this.setState({productos: this.state.productos, selected:unProducto })
+    }
+
+    productoChange(unProducto) {
+      var newState = Object.assign({}, this.state);
+      newState.productos = this.state.productos.map((item) => (unProducto._id != item._id) ? item : unProducto )
+      this.setState(newState)
+    }
+
+    renderRows() {
+      return this.state.productos.map((unProducto, index) => {
+        return (
+          <ProductoRow producto={unProducto} selector={this.select} />
+        );
+      })
+    }
+  
+  }
+
+  export default Productos
+```  
+
+####ProductosForm.js
+``` javascript
+import React from 'react';
+
+class ProductoForm extends React.Component {
+
+    constructor(props) {
+        super(props);
+    
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        this.state = {producto:props.producto}
+      }
+
+      componentWillReceiveProps(props) {
+          this.setState({producto: props.producto})
+      }
+
+      handleChange(event) {
+        var newState = Object.assign({}, this.state);
+        newState.producto[event.target.name] = event.target.value; 
+        this.setState(newState);
+      }
+
+      handleSubmit(event) {
+
+        fetch('http://localhost:8888/productos', {
+            method: 'put',
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(this.state.producto)
+        }).then(res => this.props.productoChange(this.state.producto))
+          .catch(res => console.log("ERROR") );
+
+        event.preventDefault();
+      }
+    
+      render() {
+        return (
+          <form onSubmit={this.handleSubmit}>
+            <label>Nombre:</label>
+            <input type="text" name="nombre" value={this.state.producto.nombre} onChange={this.handleChange}/>
+            <label>Precio:</label>
+            <input type="text" name="precio" value={this.state.producto.precio} onChange={this.handleChange} />
+            <input type="submit" value="Submit" />
+          </form>
+        );
+      }
+}
+
+  export default ProductoForm
+
+```
 

@@ -7,6 +7,7 @@ class Productos extends React.Component {
     super(props);
     this.state = { productos: [], selected:{}}
     this.select = this.select.bind(this);
+    this.productoChange = this.productoChange.bind(this);
   }
 
   componentWillMount() {
@@ -35,7 +36,7 @@ class Productos extends React.Component {
               {this.renderRows()}
             </tbody>
           </table>
-          <ProductoForm producto={this.state.selected} />
+          <ProductoForm producto={this.state.selected} productoChange={this.productoChange} />
         </div>)
       }
       else {
@@ -49,8 +50,13 @@ class Productos extends React.Component {
     }
 
     select(unProducto) {
-      console.log(`selecting ${JSON.stringify(unProducto)}`)
       this.setState({productos: this.state.productos, selected:unProducto })
+    }
+
+    productoChange(unProducto) {
+      var newState = Object.assign({}, this.state);
+      newState.productos = this.state.productos.map((item) => (unProducto._id != item._id) ? item : unProducto )
+      this.setState(newState)
     }
 
     renderRows() {
