@@ -54,7 +54,7 @@ class Productos extends React.Component {
 
     productoChange(unProducto) {
       var newProductos = this.state.productos.map((item) => (unProducto._id != item._id) ? item : unProducto )
-      this.setState({productos: newProductos})
+      this.setState({productos: newProductos, selected:unProducto})
     }
 
     renderRows() {
