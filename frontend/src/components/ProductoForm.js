@@ -15,9 +15,9 @@ class ProductoForm extends React.Component {
       }
 
       handleChange(event) {
-        var newState = Object.assign({}, this.state);
-        newState.producto[event.target.name] = event.target.value; 
-        this.setState(newState);
+        var newProducto = Object.assign({}, this.state.producto);
+        newProducto[event.target.name] = event.target.value;
+        this.setState({producto: newProducto});
       }
 
       handleSubmit(event) {

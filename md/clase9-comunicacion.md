@@ -220,7 +220,7 @@ class Productos extends React.Component {
     }
 
     select(unProducto) {
-      this.setState({productos: this.state.productos, selected:unProducto })
+      this.setState({selected:unProducto })
     }
 
     renderRows() {
@@ -322,8 +322,7 @@ class Productos extends React.Component {
     }
 
     select(unProducto) {
-      console.log(`selecting ${JSON.stringify(unProducto)}`)
-      this.setState({productos: this.state.productos, selected:unProducto })
+      this.setState({selected:unProducto })
     }
 
     renderRows() {
@@ -358,9 +357,9 @@ class ProductoForm extends React.Component {
       }
 
       handleChange(event) {
-        var newState = Object.assign({}, this.state);
-        newState.producto[event.target.name] = event.target.value; 
-        this.setState(newState);
+        var newProducto = Object.assign({}, this.state.producto);
+        newProducto[event.target.name] = event.target.value;
+        this.setState({producto: newProducto});
       }
 
       handleSubmit(event) {
@@ -416,12 +415,11 @@ class Productos extends React.Component {
   componentWillMount() {
     fetch(`http://localhost:8888/productos`)
       .then( res => res.json())
-      .then( prds => this.setState({productos: prds, selected: {}}));
+      .then( prds => this.setState({productos: prds}));
   }
 
     render() {
 
-      
       if( this.state.productos.length > 0 ) {
         return(
           <div className="productosCSS">
@@ -453,13 +451,12 @@ class Productos extends React.Component {
     }
 
     select(unProducto) {
-      this.setState({productos: this.state.productos, selected:unProducto })
+      this.setState({selected:unProducto })
     }
 
     productoChange(unProducto) {
-      var newState = Object.assign({}, this.state);
-      newState.productos = this.state.productos.map((item) => (unProducto._id != item._id) ? item : unProducto )
-      this.setState(newState)
+      var newProductos = this.state.productos.map((item) => (unProducto._id != item._id) ? item : unProducto )
+      this.setState({productos: newProductos})
     }
 
     renderRows() {
@@ -494,9 +491,9 @@ class ProductoForm extends React.Component {
       }
 
       handleChange(event) {
-        var newState = Object.assign({}, this.state);
-        newState.producto[event.target.name] = event.target.value; 
-        this.setState(newState);
+        var newProducto = Object.assign({}, this.state.producto);
+        newProducto[event.target.name] = event.target.value;
+        this.setState({producto: newProducto});
       }
 
       handleSubmit(event) {
@@ -528,6 +525,5 @@ class ProductoForm extends React.Component {
 }
 
   export default ProductoForm
-
 ```
 
