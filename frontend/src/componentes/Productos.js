@@ -1,9 +1,23 @@
 import React from 'react';
+import ProductoRow from './ProductoRow'
+import ProductoForm from './ProductoForm'
 
 class Productos extends React.Component {
   constructor(props) {
     super(props);
-    this.state= { productos: []}
+    this.state= { productos: [], seleccionado: {}}
+    this.selectProducto = this.selectProducto.bind(this)
+    this.productoChangeHandler = this.productoChangeHandler.bind(this)
+  }
+
+  selectProducto(unProducto) {
+
+    this.setState({seleccionado: unProducto})
+  }
+
+  productoChangeHandler(unProducto) {
+    var nuevaLista = this.state.productos.map( (item) =>  (item._id != unProducto._id) ?  item : unProducto   )
+    this.setState({productos: nuevaLista, seleccionado: unProducto})
   }
 
   componentWillMount() {
@@ -32,8 +46,10 @@ class Productos extends React.Component {
               {this.renderRows()}
             </tbody>
           </table>
+          <ProductoForm producto={this.state.seleccionado} productoChanged={this.productoChangeHandler}/>
         </div>)
       }
+
       else {
         return(
           <div className="productosCSS">
@@ -47,11 +63,7 @@ class Productos extends React.Component {
     renderRows() {
       return this.state.productos.map((unProducto, index) => {
         return (
-          <tr key={unProducto._id}>
-            <td>{unProducto._id}</td> 
-              <td>{unProducto.nombre}</td>
-              <td>{unProducto.precio}</td>
-          </tr>
+          <ProductoRow producto={unProducto} selector={this.selectProducto}/>
         );
       })
     }
