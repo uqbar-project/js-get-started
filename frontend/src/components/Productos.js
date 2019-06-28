@@ -1,17 +1,18 @@
 import React from 'react';
 import ProductoRow from './ProductoRow';
+import ProductoForm from './ProductoForm';
 
 class Productos extends React.Component {
   constructor(props) {
     super(props);
-    this.state= { productos: [], selected:''}
+    this.state = { productos: [], selected:{}}
     this.select = this.select.bind(this);
   }
 
   componentWillMount() {
     fetch(`http://localhost:8888/productos`)
       .then( res => res.json())
-      .then( prds => this.setState({productos: prds, selected: ''}));
+      .then( prds => this.setState({productos: prds, selected: {}}));
   }
 
     render() {
@@ -34,7 +35,7 @@ class Productos extends React.Component {
               {this.renderRows()}
             </tbody>
           </table>
-          <p> Selected: {this.state.selected._id}</p>
+          <ProductoForm producto={this.state.selected} />
         </div>)
       }
       else {
@@ -48,6 +49,7 @@ class Productos extends React.Component {
     }
 
     select(unProducto) {
+      console.log(`selecting ${JSON.stringify(unProducto)}`)
       this.setState({productos: this.state.productos, selected:unProducto })
     }
 
@@ -60,7 +62,5 @@ class Productos extends React.Component {
     }
   
   }
-
-
 
   export default Productos
