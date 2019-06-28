@@ -8,7 +8,7 @@ En este ejemplo vamos a modificar una clase Productos (que es una simplificació
 
 Clase original:
 
-####Productos.js
+#### Productos.js
 ``` javascript
 import React from 'react';
 
@@ -75,7 +75,7 @@ class Productos extends React.Component {
 
 Ahora extraeremos lo que se renderiza en cada fila a su propio componente
 
-####Producto.js
+#### Producto.js
 ``` javascript
 import React from 'react';
 import ProductoRow from './ProductoRow';
@@ -137,7 +137,7 @@ class Productos extends React.Component {
   export default Productos
 ```
 
-####ProductoRow
+#### ProductoRow.js
 
 ``` javascript
 import React from 'react';
@@ -167,7 +167,7 @@ Una de la manera más sencilla para realizar esto es pasándole una función que
 
 El método bind llamado en el constructor es muy importante para poder usar una función como un eventHandler, ya que de no hacerlo no funcionará la referencia "this" como nosotros esperamos
 
-####Productos.js
+#### Productos.js
 ``` javascript
 import React from 'react';
 import ProductoRow from './ProductoRow';
@@ -269,7 +269,7 @@ class ProductoRow extends React.Component {
 A través del padre se pueden comunicar los componentes hermanos. 
 En el siguiente ejemplo agregamos un componente que maneja un formulario para realizar el update en la base de datos del elemento elegido:
 
-####Productos
+#### Productos
 
 ``` javascript
 import React from 'react';
@@ -398,7 +398,7 @@ class ProductoForm extends React.Component {
 
 A través de una función, podemos actualizar el valor de la grilla en el padre luego de realizar el put.
 
-####Productos.js
+#### Productos.js
 
 ``` javascript
 import React from 'react';
@@ -475,7 +475,7 @@ class Productos extends React.Component {
   export default Productos
 ```  
 
-####ProductosForm.js
+#### ProductosForm.js
 ``` javascript
 import React from 'react';
 
