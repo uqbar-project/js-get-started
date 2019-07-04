@@ -10,10 +10,9 @@ class Productos extends React.Component {
     this.productoChange = this.productoChange.bind(this);
   }
 
-  componentWillMount() {
-    fetch(`http://localhost:8888/productos`)
-      .then( res => res.json())
-      .then( prds => this.setState({productos: prds}));
+  async componentWillMount() {
+    const response = await fetch(`http://localhost:8888/productos`)
+    this.setState({productos: await response.json()});
   }
 
     render() {
