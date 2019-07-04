@@ -20,19 +20,23 @@ class ProductoForm extends React.Component {
         this.setState({producto: newProducto});
       }
 
-      handleSubmit(event) {
+      async handleSubmit(event) {
 
-        fetch('http://localhost:8888/productos', {
+        try {
+          await fetch('http://localhost:8888/productos', {
             method: 'put',
             headers: {
                 'Accept': 'application/json, text/plain, */*',
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(this.state.producto)
-        }).then(res => this.props.productoChange(this.state.producto))
-          .catch(res => console.log("ERROR") );
+          })  
+          this.props.productoChange(this.state.producto)
+        } catch (error) {
+          console.log("ERROR")
+        }
 
-        event.preventDefault();
+        event.preventDefault()
       }
     
       render() {

@@ -7,10 +7,9 @@ class EntityList extends React.Component {
       this.state= { entities: []}
     }
 
-    componentWillMount() {
-      fetch(`http://localhost:8888/${this.props.entity}`)
-        .then( res => res.json())
-        .then( entities => this.setState({entities: entities}));
+    async componentWillMount() {
+      const response = await fetch(`http://localhost:8888/${this.props.entity}`)
+      this.setState({entities: await response.json()});
     }
 
     render() {
