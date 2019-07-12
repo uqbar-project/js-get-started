@@ -18,3 +18,5 @@ Por cada clase existe un tag "inicial" con el estado esperado al inicio de la cl
 [Clase 7: Frontend (React)](md/clase7-frontend.md)
 
 [Clase 8: Router](md/clase8-router.md)
+
+[Clase 9: Comunicacion entre Componentes](md/clase9-comunicacion.md)
