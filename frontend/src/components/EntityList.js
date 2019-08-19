@@ -1,5 +1,10 @@
 import React from 'react';
 
+const API_HOST = process.env.REACT_APP_API_HOST || 'localhost';
+const API_PORT = process.env.REACT_APP_API_PORT || 8888;
+
+const API_URL = `//${API_HOST}:${API_PORT}`;
+
 class EntityList extends React.Component {
 
     constructor(props) {
@@ -8,7 +13,7 @@ class EntityList extends React.Component {
     }
 
     componentWillMount() {
-      fetch(`http://localhost:8888/${this.props.entity}`)
+      fetch(`${API_URL}/${this.props.entity}`)
         .then( res => res.json())
         .then( entities => this.setState({entities: entities}));
     }
@@ -42,7 +47,7 @@ class EntityList extends React.Component {
         return (
             <th>{col}</th>
         );
-      })      
+      })
     }
 
     renderRows(columns) {
@@ -65,4 +70,3 @@ class EntityList extends React.Component {
 
 
   export default EntityList
-  

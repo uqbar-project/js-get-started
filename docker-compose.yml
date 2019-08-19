@@ -1,0 +1,53 @@
+version: "3"
+services:
+  frontend:
+    image: node:alpine
+    restart: on-failure
+    volumes:
+      - ./frontend/:/app
+    working_dir: /app
+    depends_on:
+      - backend
+      - frontend-install
+    environment:
+      REACT_APP_API_PORT: 8888
+    ports:
+      - 3000:3000
+      - 35729:35729
+    command: yarn start
+  frontend-install:
+    image: node:alpine
+    volumes:
+      - ./frontend/:/app
+    working_dir: /app
+    command: yarn    
+  backend:
+    image: node:alpine
+    restart: on-failure
+    volumes:
+      - ./backend/:/app
+    working_dir: /app
+    depends_on:
+      - mongo
+      - backend-install
+    environment:
+      NODE_ENV: development
+      MONGO_HOST: mongo
+      PORT: 8888
+    ports:
+      - 8888:8888
+    command: yarn dev
+  backend-install:
+    image: node:alpine
+    volumes:
+      - ./backend/:/app
+    working_dir: /app
+    command: yarn
+  mongo:
+    image: mongo
+    expose:
+      - 27017
+    volumes:
+      - data:/data/db
+volumes:
+  data:
